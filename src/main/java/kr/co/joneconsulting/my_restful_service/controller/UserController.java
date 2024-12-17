@@ -2,6 +2,7 @@ package kr.co.joneconsulting.my_restful_service.controller;
 
 import kr.co.joneconsulting.my_restful_service.bean.User;
 import kr.co.joneconsulting.my_restful_service.dao.UserDAOService;
+import kr.co.joneconsulting.my_restful_service.exception.UserNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -36,6 +37,12 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public User retrieveAllUser(@PathVariable int id) {
-        return service.findOne(id);
+        User user = service.findOne(id);
+
+        if (user == null) {
+            throw new UserNotFoundException(String.format("ID[%s] not found", id));
+        }
+
+        return user;
     }
 }
